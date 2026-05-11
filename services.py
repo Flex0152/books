@@ -177,15 +177,16 @@ class BookService:
 
         title = title.strip()
 
+        existing_book = self.book_repo.get_book_by_title_and_author(
+            title, author_name.strip())
+
+        if existing_book:
+            return existing_book
+
         author = self.author_repo.get_or_create(author_name.strip())
         genre = self.genre_repo.get_or_create(genre_name.strip())
         state = self.state_repo.get_or_create(state_name.strip())
         location = self.location_repo.get_or_create(location_name.strip())
-
-        existing_book = self.book_repo.get_book_by_title_and_author(
-            title, author_name.strip())
-        if existing_book:
-            return existing_book
 
         book = self.book_repo.create_book(
             title=title,
@@ -196,29 +197,41 @@ class BookService:
             location=location
         )
 
-        self.session.commit()
         return book
+    
+    def get_book(self, title: str) -> Books | None:
+        return self.book_repo.get_book_by_title(title)
 
 
 if __name__ == "__main__":
-    with db() as session:
-        service = LocationService(session, LocationsRepo(session))
-        result = service.update("Couch", shelf="couch")
-        print(result)
 
-        # service = BookService(
-        #     session,
-        #     BooksRepo(session),
-        #     AuthorsRepo(session),
-        #     GenresRepo(session),
-        #     StatesRepo(session),
-        #     LocationsRepo(session)
-        # )
-        # service.create_book(
-        #     "OSINT",
-        #     "Samuel Lolagar",
-        #     "Fachbuch",
-        #     "on list",
-        #     "Couch",
-        #     datetime(2026,1,1)
-        # )
+    with db() as session:
+
+        service = BookService(
+            session,
+            BooksRepo(session),
+            AuthorsRepo(session),
+            GenresRepo(session),
+            StatesRepo(session),
+            LocationsRepo(session)
+        )
+
+        book = service.create_book(
+            "Test 2. Teil",
+            "Felix",
+            "Tester",
+            "in Action",
+            "irgendwo",
+            datetime(2026,1,1)
+        )
+
+        book = service.create_book(
+            "Test 1. Teil",
+            "Felix",
+            "Tester",
+            "not started",
+            "irgendwo",
+            datetime(2026,1,1)
+        )
+
+        session.commit()
