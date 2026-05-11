@@ -108,7 +108,7 @@ class AuthorService:
     def _normalized(self, name: str) -> str:
         return name.strip().lower()
 
-    def get(self, name: str) -> AuthorsRepo | None:
+    def get(self, name: str) -> Authors | None:
         return self.author_repo.get_author_by_name(
             self._normalized(name))
 

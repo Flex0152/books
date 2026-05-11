@@ -131,7 +131,7 @@ class AuthorsRepo:
     def delete_author_by_id(self, id: int) -> None:
         author = self.get_author_by_id(id)
         if author:
-            return self.session.delete(author)
+            self.session.delete(author)
     
     def update_author_by_id(self, id: int, **kwargs) -> Authors | None:
         author = self.get_author_by_id(id)
@@ -171,7 +171,7 @@ class GenresRepo:
     def delete_genre_by_id(self, id: int) -> None:
         genre = self.get_genre_by_id(id)
         if genre:
-            return self.session.delete(genre)
+            self.session.delete(genre)
     
     def update_genre_by_id(self, id: int, **kwargs) -> Genres | None:
         genre = self.get_genre_by_id(id)
@@ -211,7 +211,7 @@ class StatesRepo:
     def delete_state_by_id(self, id: int) -> None:
         state = self.get_state_by_id(id)
         if state:
-            return self.session.delete(state)
+            self.session.delete(state)
     
     def update_state_by_id(self, id: int, **kwargs) -> States | None:
         state = self.get_state_by_id(id)
