@@ -1,7 +1,7 @@
 from services import (BookService,
-                      AuthorService,
-                      GenreService,
-                      LocationService)
+    AuthorService,
+    GenreService,
+    LocationService)
 from repos import (BooksRepo,
     AuthorsRepo,
     GenresRepo,
