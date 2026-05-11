@@ -27,30 +27,26 @@ class BooksRepo:
             location=location,
             state=state
         )
-
+        
         self.session.add(book)
-
+        self.session.flush()
         return book
     
     def get_book_by_id(self, id: int) -> Books | None:
         return self.session.get(Books, id)
-    
-    def get_book_by_title_and_author(
-            self,
-            title: str, 
-            author_name: str) -> Books | None:
-        author = self.session.query(Authors).filter_by(
-            author_name=author_name).first()
-        if author:
-            book = self.session.query(Books).filter_by(
-                book_title=title, author_id=author.id).first()
-            return book
-        else:
-            return None
+        
+    def get_book_by_title_and_author(self, title: str, author_name: str) -> Books | None:
+        stmt = (
+            select(Books)
+            .join(Books.author)
+            .where(Books.book_title == title)
+            .where(Authors.author_name == author_name)
+        )
+        return self.session.scalars(stmt).first()
     
     def get_book_by_title(self, name: str) -> Books | None:
-        stmt = select(Books).filter_by(Book_Title=name)
-        return session.execute(stmt).scalar()
+        stmt = select(Books).filter_by(book_title=name)
+        return self.session.scalars(stmt).first()
     
     def delete_book_by_id(self, id: int) -> None: 
         book = self.get_book_by_id(id)
@@ -74,9 +70,9 @@ class LocationsRepo:
         self.session = session
 
     def create_location(self, shelf: str) -> Locations:
-        location = Locations(
-            shelf=shelf)
+        location = Locations(shelf=shelf)
         self.session.add(location)
+        self.session.flush()
         return location
     
     def get_location_by_id(self, id: int) -> Locations | None:
@@ -84,7 +80,7 @@ class LocationsRepo:
     
     def get_location_by_name(self, name: str) -> Locations | None:
         stmt = select(Locations).filter_by(shelf=name)
-        return self.session.execute(stmt).scalar()
+        return self.session.scalars(stmt).first()
     
     def get_or_create(self, name: str) -> Locations:
         location = self.get_location_by_name(name)
@@ -116,6 +112,7 @@ class AuthorsRepo:
     def create_author(self, author_name: str) -> Authors:
         author = Authors(author_name=author_name)
         self.session.add(author)
+        self.session.flush()
         return author
 
     def get_author_by_id(self, id: int) -> Authors | None:
@@ -123,7 +120,7 @@ class AuthorsRepo:
 
     def get_author_by_name(self, name: str) -> Authors | None:
         stmt = select(Authors).filter_by(author_name=name)
-        return self.session.execute(stmt).scalar()
+        return self.session.scalars(stmt).first()
     
     def get_or_create(self, name: str) -> Authors:
         author = self.get_author_by_name(name)
@@ -155,6 +152,7 @@ class GenresRepo:
     def create_genre(self, genre_name: str) -> Genres:
         genre = Genres(genre_name=genre_name)
         self.session.add(genre)
+        self.session.flush()
         return genre
 
     def get_genre_by_id(self, id: int) -> Genres | None:
@@ -162,7 +160,7 @@ class GenresRepo:
 
     def get_genre_by_name(self, name: str) -> Genres | None:
         stmt = select(Genres).filter_by(genre_name=name)
-        return self.session.execute(stmt).scalar()
+        return self.session.scalars(stmt).first()
     
     def get_or_create(self, name: str) -> Genres:
         genre = self.get_genre_by_name(name)
@@ -194,6 +192,7 @@ class StatesRepo:
     def create_state(self, state_name: str) -> States:
         state = States(state_name=state_name)
         self.session.add(state)
+        self.session.flush()
         return state
 
     def get_state_by_id(self, id: int) -> States | None:
@@ -201,7 +200,7 @@ class StatesRepo:
 
     def get_state_by_name(self, name: str) -> States | None:
         stmt = select(States).filter_by(state_name=name)
-        return self.session.execute(stmt).scalar()
+        return self.session.scalars(stmt).first()
     
     def get_or_create(self, name: str) -> States:
         state = self.get_state_by_name(name)
@@ -229,15 +228,7 @@ class StatesRepo:
 if __name__ == "__main__":
     with dbSession() as session:
         b = BooksRepo(session)
-        author = Authors(author_name="Thomas Mann")
-        genre = Genres(genre_name="Fantasy")
-        location = Locations(shelf="schrank")
-        state = States(state_name="in action")
-        b.create_book(
-            "tester", 
-            datetime(1900,2,2),
-            author,
-            genre,
-            location,
-            state)
-        session.commit()
+        a = AuthorsRepo(session)
+        l = LocationsRepo(session)
+        s = StatesRepo(session)
+        g = GenresRepo(session)
