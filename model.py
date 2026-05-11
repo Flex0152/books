@@ -50,7 +50,7 @@ class States(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     state_name: Mapped[str] = mapped_column(unique=True)
 
-    books: Mapped["Books"] = relationship(
+    books: Mapped[List["Books"]] = relationship(
         back_populates="state"
     )
 
@@ -63,7 +63,7 @@ class Locations(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     shelf: Mapped[str] = mapped_column(unique=True)
 
-    books: Mapped[Books] = relationship(back_populates="location")
+    books: Mapped[List["Books"]] = relationship(back_populates="location")
 
     def __repr__(self):
         return f"<id: {self.id} - shelf: {self.shelf}>"
@@ -86,7 +86,7 @@ class Genres(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     genre_name: Mapped[str] = mapped_column(unique=True)
 
-    books: Mapped["Books"] = relationship(back_populates="genre")
+    books: Mapped[List["Books"]] = relationship(back_populates="genre")
 
     def __repr__(self):
         return f"<id: {self.id} - Genre: {self.genre_name}>"
