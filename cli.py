@@ -51,7 +51,7 @@ def add_book(
             )
 
             s.commit()
-            rprint(f":white_check_mark: The book {book.book_title} has been added successfully.")
+            rprint(f":white_check_mark: The book '{book.book_title}' has been added successfully.")
 
     except ValueError as e:
         rprint(f":x: One of the argument is faulty: {e}")
@@ -61,9 +61,22 @@ def add_book(
 
 
 @books_app.command("delete")
-def delete_book(title: str):
-    print(f"Deleted a Book: {title}")
+def delete_book(title: str, author: str = ""):
+    try:
+    
+        with session() as s:
+            service = book_service_builder(s)
 
+            service.delete(title, author)
+
+            s.commit()
+            rprint(f":white_check_mark: The book '{title}' was deleted")
+
+    except ValueError as e:
+        rprint(f":x: One of the argument is faulty: {e}")
+
+    except Exception as e:
+        rprint(f":x: An unexpected Error has ocurred: {e}")
 
 
 @location_app.command("add")
