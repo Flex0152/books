@@ -8,10 +8,11 @@ from repos import (BooksRepo,
     StatesRepo,
     LocationsRepo)
 from database import session as db
+from sqlalchemy.orm import Session
 from datetime import datetime
 
 
-def book_service_builder(session) -> BookService:
+def book_service_builder(session: Session) -> BookService:
     book_service = BookService(
         session=session,
         book_repo=BooksRepo(session),
@@ -22,21 +23,21 @@ def book_service_builder(session) -> BookService:
     )
     return book_service
 
-def author_service_builder(session) -> AuthorService:
+def author_service_builder(session: Session) -> AuthorService:
     author_service = AuthorService(
         session,
         author_repo=AuthorsRepo(session)
     )
     return author_service
 
-def genre_service_builder(session) -> GenreService:
+def genre_service_builder(session: Session) -> GenreService:
     genre_service = GenreService(
         session,
         genre_repo=GenresRepo(session)
     )
     return genre_service
 
-def location_service_builder(session) -> LocationService:
+def location_service_builder(session: Session) -> LocationService:
     location_service = LocationService(
         session,
         location_repo=LocationsRepo(session)
