@@ -31,7 +31,7 @@ class GenreService:
 
         genre = self.genre_repo.create_genre(
             self._normalized(name))
-        self.session.commit()
+        
         return genre
     
     def delete(self, name: str):
@@ -41,7 +41,7 @@ class GenreService:
             raise ValueError(f"Genre {name} not found!")
         
         self.genre_repo.delete_genre_by_id(genre.id)
-        self.session.commit()
+        
         return genre
 
     def update(self, name: str, **kwargs) -> Genres | None:
@@ -51,7 +51,7 @@ class GenreService:
         
         updated_genre = self.genre_repo.update_genre_by_id(genre.id, **kwargs)
         if updated_genre:
-            self.session.commit()
+            
             return updated_genre
         else:
             return None
@@ -75,7 +75,7 @@ class LocationService:
 
         location = self.location_repo.create_location(
             self._normalized(name))
-        self.session.commit()
+        
         return location
     
     def delete(self, name: str):
@@ -85,7 +85,7 @@ class LocationService:
             raise ValueError(f"location {name} not found!")
         
         self.location_repo.delete_location_by_id(location.id)
-        self.session.commit()
+        
         return location
 
     def update(self, name: str, **kwargs) -> Locations | None:
@@ -95,7 +95,7 @@ class LocationService:
         
         updated_location = self.location_repo.update_location_by_id(location.id, **kwargs)
         if updated_location:
-            self.session.commit()
+            
             return updated_location
         else:
             return None
@@ -119,7 +119,7 @@ class AuthorService:
 
         author = self.author_repo.create_author(
             self._normalized(name))
-        self.session.commit()
+        
         return author
     
     def delete(self, name: str):
@@ -129,7 +129,7 @@ class AuthorService:
             raise ValueError(f"author {name} not found!")
         
         self.author_repo.delete_author_by_id(author.id)
-        self.session.commit()
+        
         return author
 
     def update(self, name: str, **kwargs) -> Authors | None:
@@ -139,7 +139,7 @@ class AuthorService:
         
         updated_author = self.author_repo.update_author_by_id(author.id, **kwargs)
         if updated_author:
-            self.session.commit()
+            
             return updated_author
         else:
             return None
@@ -199,8 +199,25 @@ class BookService:
 
         return book
     
-    def get_book(self, title: str) -> Books | None:
+    def get(self, title: str) -> Books | None:
         return self.book_repo.get_book_by_title(title)
+    
+    def delete(self, title: str, author: str = ""):
+        if author:
+            book = self.book_repo.get_book_by_title_and_author(title, author)
+        else:
+            book_list = self.book_repo.list_books_by_title(title)
+
+            if len(book_list) == 1:
+                book = book_list[0]
+            else:
+                raise ValueError(f"The book '{title}' could not be identified. Please provide an author.")                
+
+        if not book:
+            raise ValueError(f"book '{title}' not found!")
+
+        self.book_repo.delete_book(book)
+        
 
 
 if __name__ == "__main__":
