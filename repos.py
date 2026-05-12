@@ -3,6 +3,7 @@ from sqlalchemy import select
 from datetime import datetime
 from model import Books, Locations, Authors, Genres, States
 from database import session as dbSession
+from typing import List
 
 
 class BooksRepo:
@@ -48,10 +49,17 @@ class BooksRepo:
         stmt = select(Books).filter_by(book_title=name)
         return self.session.scalars(stmt).first()
     
+    def list_books_by_title(self, name: str) -> list[Books]:
+        stmt = select(Books).filter_by(book_title=name)
+        return self.session.scalars(stmt).all()
+    
     def delete_book_by_id(self, id: int) -> None: 
         book = self.get_book_by_id(id)
         if book:
             self.session.delete(book)
+    
+    def delete_book(self, book: Books) -> None:
+        self.session.delete(book)
         
     def update_book_by_id(self, id: int, **kwargs) -> Books | None:
         book = self.get_book_by_id(id)
