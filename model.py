@@ -5,7 +5,7 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
-from datetime import datetime
+from datetime import date
 from typing import List
 
 
@@ -16,7 +16,7 @@ class Books(Base):
     __tablename__ = "Books"
     id: Mapped[int] = mapped_column(primary_key=True)
     book_title: Mapped[str]
-    published: Mapped[datetime]
+    published: Mapped[date]
 
     author_id: Mapped[int] = mapped_column(ForeignKey("Authors.id"))
     genre_id: Mapped[int] = mapped_column(ForeignKey("Genres.id"))
