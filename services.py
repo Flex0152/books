@@ -220,6 +220,22 @@ class BookService:
             raise ValueError(f"book '{title}' not found!")
 
         self.book_repo.delete_book(book)
+
+    def update(self, title: str, author: str = "", **kwargs) -> Books:
+        if author:
+            book = self.book_repo.get_book_by_title_and_author(title, author)
+        else:
+            book_list = self.book_repo.list_books_by_title(title)
+
+            if len(book_list) == 1:
+                book = book_list[0]
+            else:
+                raise ValueError(f"The book '{title}' could not be identified. Please provide an author.")   
+            
+        if not book:
+            raise ValueError(f"book '{title}' not found!")
+        
+        self.book_repo.update_book(book, **kwargs)
         
 
 
@@ -236,22 +252,7 @@ if __name__ == "__main__":
             LocationsRepo(session)
         )
 
-        book = service.create_book(
-            "Test 2. Teil",
-            "Felix",
-            "Tester",
-            "in Action",
-            "irgendwo",
-            datetime(2026,1,1)
-        )
-
-        book = service.create_book(
-            "Test 1. Teil",
-            "Felix",
-            "Tester",
-            "not started",
-            "irgendwo",
-            datetime(2026,1,1)
-        )
+        book = service.get("Test Book")
+        service.update("Test Book", book_title="Test Buch")
 
         session.commit()

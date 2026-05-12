@@ -65,10 +65,7 @@ class BooksRepo:
     def delete_book(self, book: Books) -> None:
         self.session.delete(book)
         
-    def update_book_by_id(self, id: int, **kwargs) -> Books | None:
-        book = self.get_book_by_id(id)
-        if not book:
-            return None
+    def update_book(self, book: Books, **kwargs) -> Books | None:
         
         for attr in kwargs:
             if hasattr(book, attr) and kwargs[attr] is not None:
@@ -244,3 +241,8 @@ if __name__ == "__main__":
         l = LocationsRepo(session)
         s = StatesRepo(session)
         g = GenresRepo(session)
+
+        book = b.get_book_by_title("Test Buch")
+        b.update_book(book, book_title="Test Book")
+
+        session.commit()

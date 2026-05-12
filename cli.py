@@ -60,6 +60,21 @@ def add_book(
     except Exception as e:
         rprint(f":x: An unexpected Error has ocurred: {e}")
 
+@books_app.command("update")
+def update_book(title: str, author: str = "", **kwargs):
+    try:
+        with session() as s:
+            service = book_service_builder(s)
+            service.update(title, author, **kwargs)
+
+            s.commit()
+            rprint(f"Book {title} successfully updated")
+
+    except ValueError as e:
+        rprint(f":x: One of the argument is faulty: {e}")
+
+    except Exception as e:
+        rprint(f":x: An unexpected Error has ocurred: {e}")    
 
 @books_app.command("delete")
 def delete_book(title: str, author: str = ""):
