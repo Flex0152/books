@@ -202,6 +202,9 @@ class BookService:
     def get(self, title: str) -> Books | None:
         return self.book_repo.get_book_by_title(title)
     
+    def list_all(self) -> list[Books]:
+        return self.book_repo.list_books()
+    
     def delete(self, title: str, author: str = ""):
         if author:
             book = self.book_repo.get_book_by_title_and_author(title, author)

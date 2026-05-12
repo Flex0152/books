@@ -7,6 +7,7 @@ import typer
 from database import session
 
 from rich import print as rprint
+from rich.console import Console
 from datetime import datetime
 
 
@@ -97,6 +98,25 @@ def fetch_book(title):
     except Exception as e:
         rprint(f":x: An unexpected Error has ocurred: {e}")
 
+@books_app.command("all")
+def list_books():
+    try:
+        console = Console()
+        with session() as s:
+            service = book_service_builder(s)
+
+            console.print("[grey15]-[grey15]" * 30)
+            for book in service.list_all():
+                rprint(f"Title:     {book.book_title}")
+                rprint(f"Author:    {book.author.author_name}")
+                rprint(f"Published: {book.published}")
+                console.print("[grey15]-[grey15]" * 30)
+
+    except ValueError as e:
+        rprint(f":x: One of the argument is faulty: {e}")
+
+    except Exception as e:
+        rprint(f":x: An unexpected Error has ocurred: {e}")
 
 @location_app.command("add")
 def add_location(name: str):

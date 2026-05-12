@@ -53,6 +53,10 @@ class BooksRepo:
         stmt = select(Books).filter_by(book_title=name)
         return self.session.scalars(stmt).all()
     
+    def list_books(self) -> list[Books]:
+        stmt = select(Books)
+        return self.session.scalars(stmt).all()
+    
     def delete_book_by_id(self, id: int) -> None: 
         book = self.get_book_by_id(id)
         if book:
