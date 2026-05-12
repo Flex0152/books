@@ -78,6 +78,25 @@ def delete_book(title: str, author: str = ""):
     except Exception as e:
         rprint(f":x: An unexpected Error has ocurred: {e}")
 
+@books_app.command("search")
+def fetch_book(title):
+    try:
+        with session() as s:
+            service = book_service_builder(s)
+
+            book = service.get(title)
+
+            if book:
+                rprint(f":book: Title: '{book.book_title}', Autor: '{book.author.author_name}', published: {book.published}")
+            else:
+                rprint(":prohibited: Can't find this book!")
+
+    except ValueError as e:
+        rprint(f":x: One of the argument is faulty: {e}")
+
+    except Exception as e:
+        rprint(f":x: An unexpected Error has ocurred: {e}")
+
 
 @location_app.command("add")
 def add_location(name: str):
