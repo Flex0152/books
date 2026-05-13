@@ -62,7 +62,7 @@ class LocationService:
         self.location_repo = location_repo
 
     def _normalized(self, name: str) -> str:
-        return name.strip()#.lower()
+        return name.strip()
 
     def get(self, name: str) -> Locations | None:
         return self.location_repo.get_location_by_name(
@@ -106,43 +106,41 @@ class AuthorService:
         self.author_repo = author_repo
 
     def _normalized(self, name: str) -> str:
-        return name.strip().lower()
+        return name.strip()
 
     def get(self, name: str) -> Authors | None:
         return self.author_repo.get_author_by_name(
             self._normalized(name))
+    
+    def get_by_id(self, id: int) -> Authors | None:
+        return self.author_repo.get_author_by_id(id)
+    
+    def list_all(self) -> list[Authors]:
+        return self.author_repo.list_authors()
 
-    def new(self, name: str):
-        new_author = self.get(name)
-        if new_author:
-            raise ValueError(f"author {new_author} already exists!")
+    def new(self, name: str) -> Authors:
+        if self.get(name):
+            raise ValueError(f"author '{name}' already exists!")
 
         author = self.author_repo.create_author(
             self._normalized(name))
         
         return author
     
-    def delete(self, name: str):
+    def delete(self, name: str) -> Authors:
         author = self.get(name)
-
         if not author:
             raise ValueError(f"author {name} not found!")
         
         self.author_repo.delete_author_by_id(author.id)
-        
         return author
 
     def update(self, name: str, **kwargs) -> Authors | None:
         author = self.get(name)
         if not author:
-            raise ValueError(f"author {name} nicht gefunden!")
-        
-        updated_author = self.author_repo.update_author_by_id(author.id, **kwargs)
-        if updated_author:
-            
-            return updated_author
-        else:
-            return None
+            raise ValueError(f"author {name} not found!")
+
+        return self.author_repo.update_author(author, **kwargs)
 
 
 class BookService:
@@ -261,7 +259,11 @@ if __name__ == "__main__":
             LocationsRepo(session)
         )
 
-        book = service.get("Test Book")
-        service.update("Test Book", author_name="Felix")
+        author_service = AuthorService(
+            session,
+            AuthorsRepo(session)
+        )
 
-        session.commit()
+        # author_service.new("Felix")
+        # book = author_service.update("Felix", author_name="Felix W.")
+        print(author_service.list_all())

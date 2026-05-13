@@ -22,6 +22,10 @@ app.add_typer(genre_app, name="Genres")
 location_app = typer.Typer()
 app.add_typer(location_app, name="Locations")
 
+author_app = typer.Typer()
+app.add_typer(author_app, name="Authors")
+
+
 @books_app.command("add")
 def add_book(
     title: str,
@@ -109,7 +113,7 @@ def delete_book(title: str, author: str = ""):
         rprint(f":x: An unexpected Error has ocurred: {e}")
 
 @books_app.command("search")
-def fetch_book(title):
+def search_book(title):
     try:
         with session() as s:
             service = book_service_builder(s)
@@ -140,16 +144,84 @@ def list_books():
                 rprint(f"Author:    {book.author.author_name}")
                 rprint(f"Published: {book.published}")
                 console.print("[grey15]-[grey15]" * 30)
-
     except ValueError as e:
         rprint(f":x: One of the argument is faulty: {e}")
-
     except Exception as e:
         rprint(f":x: An unexpected Error has ocurred: {e}")
 
-@location_app.command("add")
-def add_location(name: str):
-    print(f"deleted a location: {name}")
+
+@author_app.command("add")
+def add_author(name: str):
+    try:
+        with session() as s:
+            service = author_service_builder(s)
+            service.new(name)
+            s.commit()
+            rprint(f":white_check_mark: The author '{name}' has been added successfully.")
+    except ValueError as e:
+        rprint(f":x: One of the argument is faulty: {e}")
+    except Exception as e:
+        rprint(f":x: An unexpected Error has ocurred: {e}")
+
+@author_app.command("update")
+def update_author(name: str, new_name: str):
+    try:
+        with session() as s:
+            service = author_service_builder(s)
+            service.update(name, author_name=new_name)
+            s.commit()
+            rprint(f":white_check_mark: Author '{name}' successfully updated")
+    except ValueError as e:
+        rprint(f":x: One of the argument is faulty: {e}")
+    except Exception as e:
+        rprint(f":x: An unexpected Error has ocurred: {e}")
+    
+@author_app.command("delete")
+def delete_author(name: str):
+    try:
+        with session() as s:
+            service = author_service_builder(s)
+            service.delete(name)
+            s.commit()
+            rprint(f":white_check_mark: The author '{name}' was deleted")
+    except ValueError as e:
+        rprint(f":x: One of the argument is faulty: {e}")
+    except Exception as e:
+        rprint(f":x: An unexpected Error has ocurred: {e}")
+    
+@author_app.command("search")
+def search_author(name: str):
+    try:
+        with session() as s:
+            service = author_service_builder(s)
+
+            author = service.get(name)
+
+            if author:
+                rprint(f":lower_left_fountain_pen: Name: '{author.author_name}'")
+            else:
+                rprint(":prohibited: Can't find this author!")
+
+    except ValueError as e:
+        rprint(f":x: One of the argument is faulty: {e}")
+    except Exception as e:
+        rprint(f":x: An unexpected Error has ocurred: {e}")
+
+@author_app.command("all")
+def list_authors():
+    try:
+        console = Console()
+        with session() as s:
+            service = author_service_builder(s)
+            console.print("[grey15]-[grey15]" * 30)
+            for author in service.list_all():
+                rprint(f"Author:    {author.author_name}")
+
+    except ValueError as e:
+        rprint(f":x: One of the argument is faulty: {e}")
+    except Exception as e:
+        rprint(f":x: An unexpected Error has ocurred: {e}")
+
 
 
 if __name__ == "__main__":
