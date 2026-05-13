@@ -61,14 +61,28 @@ def add_book(
         rprint(f":x: An unexpected Error has ocurred: {e}")
 
 @books_app.command("update")
-def update_book(title: str, author: str = "", **kwargs):
+def update_book(
+    title: str,
+    author: str = "",
+    new_title: str = typer.Option(None, "--new-title"),
+    new_author: str = typer.Option(None, "--new-author"),
+    genre: str = typer.Option(None, "--genre"),
+    state: str = typer.Option(None, "--state"),
+    location: str = typer.Option(None, "--location"),
+):
+    kwargs = {}
+    if new_title:  kwargs["book_title"] = new_title
+    if new_author: kwargs["author_name"] = new_author  # Service löst auf
+    if genre:      kwargs["genre_name"] = genre
+    if state:      kwargs["state_name"] = state
+    if location:   kwargs["location_name"] = location
     try:
         with session() as s:
             service = book_service_builder(s)
             service.update(title, author, **kwargs)
 
             s.commit()
-            rprint(f"Book {title} successfully updated")
+            rprint(f":white_check_mark: Book '{title}' successfully updated")
 
     except ValueError as e:
         rprint(f":x: One of the argument is faulty: {e}")
