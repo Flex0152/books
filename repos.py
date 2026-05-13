@@ -65,8 +65,7 @@ class BooksRepo:
     def delete_book(self, book: Books) -> None:
         self.session.delete(book)
         
-    def update_book(self, book: Books, **kwargs) -> Books | None:
-        
+    def update_book(self, book: Books, **kwargs) -> Books:
         for attr in kwargs:
             if hasattr(book, attr) and kwargs[attr] is not None:
                 setattr(book, attr, kwargs[attr])
@@ -131,6 +130,10 @@ class AuthorsRepo:
         stmt = select(Authors).filter_by(author_name=name)
         return self.session.scalars(stmt).first()
     
+    def list_authors(self) -> list[Authors]:
+        stmt = select(Authors)
+        return self.session.scalars(stmt).all()
+    
     def get_or_create(self, name: str) -> Authors:
         author = self.get_author_by_name(name)
         if not author:
@@ -142,11 +145,7 @@ class AuthorsRepo:
         if author:
             self.session.delete(author)
     
-    def update_author_by_id(self, id: int, **kwargs) -> Authors | None:
-        author = self.get_author_by_id(id)
-        if not author:
-            return None
-        
+    def update_author(self, author: Authors, **kwargs) -> Authors:
         for attr in kwargs:
             if hasattr(author, attr) and kwargs[attr] is not None:
                 setattr(author, attr, kwargs[attr])
