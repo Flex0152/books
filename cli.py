@@ -2,6 +2,7 @@ from dependencies import (
     book_service_builder,
     author_service_builder,
     location_service_builder,
+    genre_service_builder,
 )
 import typer
 from database import session
@@ -222,6 +223,117 @@ def list_authors():
     except Exception as e:
         rprint(f":x: An unexpected Error has ocurred: {e}")
 
+
+@location_app.command("add")
+def add_location(shelf: str):
+    try:
+        with session() as s:
+            service = location_service_builder(s)
+            location = service.new(shelf)
+            s.commit()
+            rprint(f":white_check_mark: The location '{location.shelf}' has been added successfully.")
+    except ValueError as e:
+        rprint(f":x: One of the argument is faulty: {e}")
+    except Exception as e:
+        rprint(f":x: An unexpected Error has ocurred: {e}")
+ 
+@location_app.command("update")
+def update_location(shelf: str, new_shelf: str):
+    try:
+        with session() as s:
+            service = location_service_builder(s)
+            service.update(shelf, shelf=new_shelf)
+            s.commit()
+            rprint(f":white_check_mark: Location '{shelf}' successfully updated to '{new_shelf}'")
+    except ValueError as e:
+        rprint(f":x: One of the argument is faulty: {e}")
+    except Exception as e:
+        rprint(f":x: An unexpected Error has ocurred: {e}")
+ 
+ 
+@location_app.command("delete")
+def delete_location(shelf: str):
+    try:
+        with session() as s:
+            service = location_service_builder(s)
+            service.delete(shelf)
+            s.commit()
+            rprint(f":white_check_mark: The location '{shelf}' was deleted")
+    except ValueError as e:
+        rprint(f":x: One of the argument is faulty: {e}")
+    except Exception as e:
+        rprint(f":x: An unexpected Error has ocurred: {e}")
+ 
+ 
+@location_app.command("search")
+def search_location(shelf: str):
+    try:
+        with session() as s:
+            service = location_service_builder(s)
+            location = service.get(shelf)
+            if location:
+                rprint(f":card_index_dividers: Shelf: '{location.shelf}'")
+            else:
+                rprint(":prohibited: Can't find this location!")
+    except ValueError as e:
+        rprint(f":x: One of the argument is faulty: {e}")
+    except Exception as e:
+        rprint(f":x: An unexpected Error has ocurred: {e}")
+
+
+@genre_app.command("add")
+def add_genre(name: str):
+    try:
+        with session() as s:
+            service = genre_service_builder(s)
+            genre = service.new(name)
+            s.commit()
+            rprint(f":white_check_mark: The genre '{genre.genre_name}' has been added successfully.")
+    except ValueError as e:
+        rprint(f":x: One of the argument is faulty: {e}")
+    except Exception as e:
+        rprint(f":x: An unexpected Error has ocurred: {e}")
+
+@genre_app.command("update")
+def update_genre(name: str, new_name: str):
+    try:
+        with session() as s:
+            service = genre_service_builder(s)
+            service.update(name, genre_name=new_name)
+            s.commit()
+            rprint(f":white_check_mark: Genre '{name}' successfully updated to '{new_name}'")
+    except ValueError as e:
+        rprint(f":x: One of the argument is faulty: {e}")
+    except Exception as e:
+        rprint(f":x: An unexpected Error has ocurred: {e}")
+ 
+@genre_app.command("delete")
+def delete_genre(name: str):
+    try:
+        with session() as s:
+            service = genre_service_builder(s)
+            genre = service.delete(name)
+            s.commit()
+            rprint(f":white_check_mark: The genre '{genre.genre_name}' was deleted")
+    except ValueError as e:
+        rprint(f":x: One of the argument is faulty: {e}")
+    except Exception as e:
+        rprint(f":x: An unexpected Error has ocurred: {e}")
+ 
+@genre_app.command("search")
+def search_genre(name: str):
+    try:
+        with session() as s:
+            service = genre_service_builder(s)
+            genre = service.get(name)
+            if genre:
+                rprint(f":books: Genre: '{genre.genre_name}'")
+            else:
+                rprint(":prohibited: Can't find this genre!")
+    except ValueError as e:
+        rprint(f":x: One of the argument is faulty: {e}")
+    except Exception as e:
+        rprint(f":x: An unexpected Error has ocurred: {e}")
 
 
 if __name__ == "__main__":
