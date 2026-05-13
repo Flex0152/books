@@ -96,15 +96,10 @@ class LocationsRepo:
             location = self.create_location(name)
         return location
     
-    def delete_location_by_id(self, id: int) -> None:
-        location = self.get_location_by_id(id)
-        if location:
-            self.session.delete(location)
+    def delete_location(self, location: Locations) -> None:
+        self.session.delete(location)
 
-    def update_location_by_id(self, id: int, **kwargs) -> Locations | None:
-        location = self.get_location_by_id(id)
-        if not location:
-            return None
+    def update_location(self, location: Locations, **kwargs) -> Locations | None:
         
         for attr in kwargs:
             if hasattr(location, attr) and kwargs[attr] is not None:
@@ -140,10 +135,8 @@ class AuthorsRepo:
             author = self.create_author(name)
         return author
     
-    def delete_author_by_id(self, id: int) -> None:
-        author = self.get_author_by_id(id)
-        if author:
-            self.session.delete(author)
+    def delete_author(self, author: Authors) -> None:
+        self.session.delete(author)
     
     def update_author(self, author: Authors, **kwargs) -> Authors:
         for attr in kwargs:
@@ -176,16 +169,10 @@ class GenresRepo:
             genre = self.create_genre(name)
         return genre
     
-    def delete_genre_by_id(self, id: int) -> None:
-        genre = self.get_genre_by_id(id)
-        if genre:
-            self.session.delete(genre)
+    def delete_genre(self, genre: Genres) -> None:
+        self.session.delete(genre)
     
-    def update_genre_by_id(self, id: int, **kwargs) -> Genres | None:
-        genre = self.get_genre_by_id(id)
-        if not genre:
-            return None
-        
+    def update_genre(self, genre: Genres, **kwargs) -> Genres | None:
         for attr in kwargs:
             if hasattr(genre, attr) and kwargs[attr] is not None:
                 setattr(genre, attr, kwargs[attr])

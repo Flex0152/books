@@ -36,12 +36,10 @@ class GenreService:
     
     def delete(self, name: str):
         genre = self.get(name)
-
         if not genre:
             raise ValueError(f"Genre {name} not found!")
         
-        self.genre_repo.delete_genre_by_id(genre.id)
-        
+        self.genre_repo.delete_genre(genre)
         return genre
 
     def update(self, name: str, **kwargs) -> Genres | None:
@@ -49,12 +47,7 @@ class GenreService:
         if not genre:
             raise ValueError(f"Genre {name} nicht gefunden!")
         
-        updated_genre = self.genre_repo.update_genre_by_id(genre.id, **kwargs)
-        if updated_genre:
-            
-            return updated_genre
-        else:
-            return None
+        return self.genre_repo.update_genre(genre, **kwargs)
         
 class LocationService:
     def __init__(self, session: Session, location_repo: LocationsRepo):
@@ -67,6 +60,9 @@ class LocationService:
     def get(self, name: str) -> Locations | None:
         return self.location_repo.get_location_by_name(
             self._normalized(name))
+    
+    def get_by_id(self, id: int) -> Locations | None:
+        return self.location_repo.get_location_by_id(id)
 
     def new(self, name: str):
         new_location = self.get(name)
@@ -79,13 +75,8 @@ class LocationService:
         return location
     
     def delete(self, name: str):
-        location = self.get(name)
-
-        if not location:
-            raise ValueError(f"location {name} not found!")
-        
-        self.location_repo.delete_location_by_id(location.id)
-        
+        location = self.get(name)       
+        self.location_repo.delete_location(location)
         return location
 
     def update(self, name: str, **kwargs) -> Locations | None:
@@ -93,12 +84,7 @@ class LocationService:
         if not location:
             raise ValueError(f"location {name} nicht gefunden!")
         
-        updated_location = self.location_repo.update_location_by_id(location.id, **kwargs)
-        if updated_location:
-            
-            return updated_location
-        else:
-            return None
+        return self.location_repo.update_location(location, **kwargs)
 
 class AuthorService:
     def __init__(self, session: Session, author_repo: AuthorsRepo):
@@ -129,10 +115,7 @@ class AuthorService:
     
     def delete(self, name: str) -> Authors:
         author = self.get(name)
-        if not author:
-            raise ValueError(f"author {name} not found!")
-        
-        self.author_repo.delete_author_by_id(author.id)
+        self.author_repo.delete_author(author)
         return author
 
     def update(self, name: str, **kwargs) -> Authors | None:
