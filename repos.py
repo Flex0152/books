@@ -203,16 +203,10 @@ class StatesRepo:
             state = self.create_state(name)
         return state
     
-    def delete_state_by_id(self, id: int) -> None:
-        state = self.get_state_by_id(id)
-        if state:
-            self.session.delete(state)
+    def delete_state(self, state: States) -> None:
+        self.session.delete(state)
     
-    def update_state_by_id(self, id: int, **kwargs) -> States | None:
-        state = self.get_state_by_id(id)
-        if not state:
-            return None
-        
+    def update_state_by_id(self, state: States, **kwargs) -> States | None:      
         for attr in kwargs:
             if hasattr(state, attr) and kwargs[attr] is not None:
                 setattr(state, attr, kwargs[attr])
