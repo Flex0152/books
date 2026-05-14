@@ -128,4 +128,4 @@ uv run cli.py States all
 ```
 
 ## 📄 License
-This Project is released under the MIT [./LICENSE].
+This Project is released under the MIT [License](./LICENSE).
