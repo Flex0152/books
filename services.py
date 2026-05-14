@@ -24,7 +24,7 @@ class GenreService:
         return self.genre_repo.get_genre_by_name(
             self._normalized(name))
 
-    def new(self, name: str):
+    def new(self, name: str) -> Genres:
         new_genre = self.get(name)
         if new_genre:
             raise ValueError(f"Genre {new_genre} already exists!")
@@ -34,13 +34,12 @@ class GenreService:
         
         return genre
     
-    def delete(self, name: str):
+    def delete(self, name: str) -> None:
         genre = self.get(name)
         if not genre:
             raise ValueError(f"Genre {name} not found!")
         
         self.genre_repo.delete_genre(genre)
-        return genre
 
     def update(self, name: str, **kwargs) -> Genres | None:
         genre = self.get(name)
@@ -74,10 +73,11 @@ class LocationService:
         
         return location
     
-    def delete(self, name: str):
+    def delete(self, name: str) -> None:
         location = self.get(name)       
+        if not location:
+            raise ValueError(f"location '{name}' not found!")
         self.location_repo.delete_location(location)
-        return location
 
     def update(self, name: str, **kwargs) -> Locations | None:
         location = self.get(name)
@@ -104,7 +104,7 @@ class StateService:
     def list_all(self) -> list[States]:
         return self.state_repo.list_states()
 
-    def new(self, name: str):
+    def new(self, name: str) -> States:
         new_state = self.get(name)
         if new_state:
             raise ValueError(f"state {new_state} already exists!")
@@ -114,12 +114,13 @@ class StateService:
         
         return state
     
-    def delete(self, name: str):
+    def delete(self, name: str) -> States:
         state = self.get(name)       
-        self.state_repo.delete_state(state)
-        return state
+        if not state:
+            raise ValueError(f"state '{name}' not found!")
+        return self.state_repo.delete_state(state)
 
-    def update(self, name: str, **kwargs) -> Locations | None:
+    def update(self, name: str, **kwargs) -> States | None:
         state = self.get(name)
         if not state:
             raise ValueError(f"state {name} not found!")
@@ -153,10 +154,11 @@ class AuthorService:
         
         return author
     
-    def delete(self, name: str) -> Authors:
+    def delete(self, name: str) -> None:
         author = self.get(name)
+        if not author:
+            raise ValueError(f"author '{name}' not found!")
         self.author_repo.delete_author(author)
-        return author
 
     def update(self, name: str, **kwargs) -> Authors | None:
         author = self.get(name)
@@ -244,7 +246,6 @@ class BookService:
     def delete(self, title: str, author: str = ""):
         book = self._identify_book(title, author)
         self.book_repo.delete_book(book)
-
 
     def update(self, title: str, author: str = "", **kwargs) -> Books:
 

@@ -101,12 +101,9 @@ def update_book(
 @books_app.command("delete")
 def delete_book(title: str, author: str = ""):
     try:
-    
         with session() as s:
             service = book_service_builder(s)
-
             service.delete(title, author)
-
             s.commit()
             rprint(f":white_check_mark: The book '{title}' was deleted")
 
@@ -316,9 +313,9 @@ def delete_genre(name: str):
     try:
         with session() as s:
             service = genre_service_builder(s)
-            genre = service.delete(name)
+            service.delete(name)
             s.commit()
-            rprint(f":white_check_mark: The genre '{genre.genre_name}' was deleted")
+            rprint(f":white_check_mark: The genre '{name}' was deleted")
     except ValueError as e:
         rprint(f":x: One of the argument is faulty: {e}")
     except Exception as e:
@@ -372,9 +369,9 @@ def delete_state(name: str):
     try:
         with session() as s:
             service = state_service_builder(s)
-            state = service.delete(name)
+            service.delete(name)
             s.commit()
-            rprint(f":white_check_mark: The state '{state.state_name}' was deleted")
+            rprint(f":white_check_mark: The state '{name}' was deleted")
     except ValueError as e:
         rprint(f":x: One of the argument is faulty: {e}")
     except Exception as e:
