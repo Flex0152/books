@@ -197,6 +197,10 @@ class StatesRepo:
         stmt = select(States).filter_by(state_name=name)
         return self.session.scalars(stmt).first()
     
+    def list_states(self) -> list[States]:
+        stmt = select(States)
+        return self.session.scalars(stmt).all()
+    
     def get_or_create(self, name: str) -> States:
         state = self.get_state_by_name(name)
         if not state:
@@ -206,7 +210,7 @@ class StatesRepo:
     def delete_state(self, state: States) -> None:
         self.session.delete(state)
     
-    def update_state_by_id(self, state: States, **kwargs) -> States | None:      
+    def update_state(self, state: States, **kwargs) -> States | None:      
         for attr in kwargs:
             if hasattr(state, attr) and kwargs[attr] is not None:
                 setattr(state, attr, kwargs[attr])

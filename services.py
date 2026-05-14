@@ -5,7 +5,7 @@ from repos import (
     AuthorsRepo, 
     StatesRepo
 )
-from model import Genres, Locations, Authors, Books
+from model import Genres, Locations, Authors, Books, States
 from database import session as db
 from sqlalchemy.orm import Session
 
@@ -85,6 +85,46 @@ class LocationService:
             raise ValueError(f"location {name} nicht gefunden!")
         
         return self.location_repo.update_location(location, **kwargs)
+
+class StateService:
+    def __init__(self, session: Session, state_repo: StatesRepo):
+        self.session = session
+        self.state_repo = state_repo
+
+    def _normalized(self, name: str) -> str:
+        return name.strip()
+
+    def get(self, name: str) -> States | None:
+        return self.state_repo.get_state_by_name(
+            self._normalized(name))
+    
+    def get_by_id(self, id: int) -> States | None:
+        return self.state_repo.get_state_by_id(id)
+    
+    def list_all(self) -> list[States]:
+        return self.state_repo.list_states()
+
+    def new(self, name: str):
+        new_state = self.get(name)
+        if new_state:
+            raise ValueError(f"state {new_state} already exists!")
+
+        state = self.state_repo.create_state(
+            self._normalized(name))
+        
+        return state
+    
+    def delete(self, name: str):
+        state = self.get(name)       
+        self.state_repo.delete_state(state)
+        return state
+
+    def update(self, name: str, **kwargs) -> Locations | None:
+        state = self.get(name)
+        if not state:
+            raise ValueError(f"state {name} not found!")
+        
+        return self.state_repo.update_state(state, **kwargs)
 
 class AuthorService:
     def __init__(self, session: Session, author_repo: AuthorsRepo):

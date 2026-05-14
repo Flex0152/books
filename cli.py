@@ -3,6 +3,7 @@ from dependencies import (
     author_service_builder,
     location_service_builder,
     genre_service_builder,
+    state_service_builder
 )
 import typer
 from database import session
@@ -26,7 +27,11 @@ app.add_typer(location_app, name="Locations")
 author_app = typer.Typer()
 app.add_typer(author_app, name="Authors")
 
+state_app = typer.Typer()
+app.add_typer(state_app, name="States")
 
+
+# ------- BOOKS
 @books_app.command("add")
 def add_book(
     title: str,
@@ -43,10 +48,8 @@ def add_book(
         return
     
     try:
-        
         with session() as s:
             service = book_service_builder(s)
-
             book = service.create_book(
                 title=title,
                 author_name=author,
@@ -151,6 +154,7 @@ def list_books():
         rprint(f":x: An unexpected Error has ocurred: {e}")
 
 
+# ------- AUTHOR
 @author_app.command("add")
 def add_author(name: str):
     try:
@@ -224,6 +228,7 @@ def list_authors():
         rprint(f":x: An unexpected Error has ocurred: {e}")
 
 
+# ------- LOCATION
 @location_app.command("add")
 def add_location(shelf: str):
     try:
@@ -250,7 +255,6 @@ def update_location(shelf: str, new_shelf: str):
     except Exception as e:
         rprint(f":x: An unexpected Error has ocurred: {e}")
  
- 
 @location_app.command("delete")
 def delete_location(shelf: str):
     try:
@@ -263,7 +267,6 @@ def delete_location(shelf: str):
         rprint(f":x: One of the argument is faulty: {e}")
     except Exception as e:
         rprint(f":x: An unexpected Error has ocurred: {e}")
- 
  
 @location_app.command("search")
 def search_location(shelf: str):
@@ -281,6 +284,7 @@ def search_location(shelf: str):
         rprint(f":x: An unexpected Error has ocurred: {e}")
 
 
+# ------- GENRE
 @genre_app.command("add")
 def add_genre(name: str):
     try:
@@ -330,6 +334,77 @@ def search_genre(name: str):
                 rprint(f":books: Genre: '{genre.genre_name}'")
             else:
                 rprint(":prohibited: Can't find this genre!")
+    except ValueError as e:
+        rprint(f":x: One of the argument is faulty: {e}")
+    except Exception as e:
+        rprint(f":x: An unexpected Error has ocurred: {e}")
+
+
+# ------- STATES
+@state_app.command("add")
+def add_state(name: str):
+    try:
+        with session() as s:
+            service = state_service_builder(s)
+            state = service.new(name)
+            s.commit()
+            rprint(f":white_check_mark: The state '{state.state_name}' has been added successfully.")
+    except ValueError as e:
+        rprint(f":x: One of the argument is faulty: {e}")
+    except Exception as e:
+        rprint(f":x: An unexpected Error has ocurred: {e}")
+ 
+@state_app.command("update")
+def update_state(name: str, new_name: str):
+    try:
+        with session() as s:
+            service = state_service_builder(s)
+            service.update(name, state_name=new_name)
+            s.commit()
+            rprint(f":white_check_mark: State '{name}' successfully updated to '{new_name}'")
+    except ValueError as e:
+        rprint(f":x: One of the argument is faulty: {e}")
+    except Exception as e:
+        rprint(f":x: An unexpected Error has ocurred: {e}")
+ 
+@state_app.command("delete")
+def delete_state(name: str):
+    try:
+        with session() as s:
+            service = state_service_builder(s)
+            state = service.delete(name)
+            s.commit()
+            rprint(f":white_check_mark: The state '{state.state_name}' was deleted")
+    except ValueError as e:
+        rprint(f":x: One of the argument is faulty: {e}")
+    except Exception as e:
+        rprint(f":x: An unexpected Error has ocurred: {e}")
+ 
+@state_app.command("search")
+def search_state(name: str):
+    try:
+        with session() as s:
+            service = state_service_builder(s)
+            state = service.get(name)
+            if state:
+                rprint(f":label: State: '{state.state_name}'")
+            else:
+                rprint(":prohibited: Can't find this state!")
+    except ValueError as e:
+        rprint(f":x: One of the argument is faulty: {e}")
+    except Exception as e:
+        rprint(f":x: An unexpected Error has ocurred: {e}")
+ 
+@state_app.command("all")
+def list_states():
+    try:
+        console = Console()
+        with session() as s:
+            service = state_service_builder(s)
+            console.print("[grey15]-[grey15]" * 30)
+            for state in service.list_all():
+                rprint(f"State:     {state.state_name}")
+            console.print("[grey15]-[grey15]" * 30)
     except ValueError as e:
         rprint(f":x: One of the argument is faulty: {e}")
     except Exception as e:

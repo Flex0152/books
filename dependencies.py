@@ -1,7 +1,8 @@
 from services import (BookService,
     AuthorService,
     GenreService,
-    LocationService)
+    LocationService,
+    StateService)
 from repos import (BooksRepo,
     AuthorsRepo,
     GenresRepo,
@@ -9,7 +10,6 @@ from repos import (BooksRepo,
     LocationsRepo)
 from database import session as db
 from sqlalchemy.orm import Session
-from datetime import datetime
 
 
 def book_service_builder(session: Session) -> BookService:
@@ -22,6 +22,13 @@ def book_service_builder(session: Session) -> BookService:
         location_repo=LocationsRepo(session)
     )
     return book_service
+
+def state_service_builder(session: Session) -> StateService:
+    state_service = StateService(
+        session=session,
+        state_repo=StatesRepo(session)
+    )
+    return state_service
 
 def author_service_builder(session: Session) -> AuthorService:
     author_service = AuthorService(
