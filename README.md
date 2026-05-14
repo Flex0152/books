@@ -1,12 +1,12 @@
 # 📚 Books
-I have a lots of books. They're everywhere in my live. This project helps me keep track of them.
+I have a lot of books. They're everywhere in my life. This project helps me keep track of them.
 
 ## 🎯 About the project
-I have three goals with this project. I would like to improve my sqlalchemy skills. For this reason, the project is based on sqlalchemy ORM. <br>
-I also want to learn more about deployment. That is why the project is running in containers. In future, it will run in the cloud. <br>
-Finally, the project is intended to manage my books.
-<br>
-So far, building a frontend has not been priority. That is why the user interface is a simple CLI.
+I had three goals when starting this project.
+First, I wanted to deepen my SQLAlchemy skills. I chose SQLAlchemy ORM over raw SQL to practice working with the kind of abstraction layer I'd encounter in larger, real-world codebases — even though for a project of this scale, raw SQL would have been the simpler choice.
+Second, I wanted to get hands-on experience with deployment. The project runs in containers, and the next step is moving it to the cloud. I'm treating it as a learning environment, not just a finished product.
+Third — and most obviously — I needed a way to actually manage my books.
+So far, building a frontend has not been a priority. The current interface is a simple CLI, which is enough for now. A proper UI will come once the infrastructure side feels solid.
 
 ## 📖 Features
 The app has five sections. Each section has features for add, update, delete and search. If an object does not exist, it will be created. 
