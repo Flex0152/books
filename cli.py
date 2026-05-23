@@ -77,6 +77,7 @@ def update_book(
     genre: str = typer.Option(None, "--genre"),
     state: str = typer.Option(None, "--state"),
     location: str = typer.Option(None, "--location"),
+    published: str = typer.Option(None, "--published"),
 ):
     kwargs = {}
     if new_title:  kwargs["book_title"] = new_title
@@ -84,6 +85,15 @@ def update_book(
     if genre:      kwargs["genre_name"] = genre
     if state:      kwargs["state_name"] = state
     if location:   kwargs["location_name"] = location
+
+    if published:  
+        try:
+            parsed_date = datetime.fromisoformat(published)
+        except ValueError:
+            rprint(":x: invalid date format, please use YYYY-MM-DD")
+            return
+        
+        kwargs["published"] = parsed_date
     try:
         with session() as s:
             service = book_service_builder(s)
