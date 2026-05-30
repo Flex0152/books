@@ -1,12 +1,12 @@
-from repos import (
+from app.repos import (
     BooksRepo,
     GenresRepo,
     LocationsRepo,
     AuthorsRepo, 
     StatesRepo
 )
-from model import Genres, Locations, Authors, Books, States
-from database import session as db
+from app.model import Genres, Locations, Authors, Books, States
+from app.database import session as db
 from sqlalchemy.orm import Session
 
 from datetime import datetime

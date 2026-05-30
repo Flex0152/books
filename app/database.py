@@ -1,4 +1,4 @@
-from model import Base
+from app.model import Base
 import sqlalchemy as sa 
 from sqlalchemy.orm import sessionmaker
 
