@@ -11,14 +11,14 @@ dependencies = [
 ]
 
 [project.scripts]
-books = "app.cli:main"
+books = "books.cli:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["app"]
+packages = ["books"]
 
 [dependency-groups]
 dev = [
