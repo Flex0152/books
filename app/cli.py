@@ -1,4 +1,4 @@
-from dependencies import (
+from app.dependencies import (
     book_service_builder,
     author_service_builder,
     location_service_builder,
@@ -6,7 +6,7 @@ from dependencies import (
     state_service_builder
 )
 import typer
-from database import session
+from app.database import session
 
 from rich import print as rprint
 from rich.console import Console
@@ -418,5 +418,9 @@ def list_states():
         rprint(f":x: An unexpected Error has ocurred: {e}")
 
 
-if __name__ == "__main__":
+def main():
     app()
+
+
+if __name__ == "__main__":
+    main()
