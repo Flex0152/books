@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from datetime import datetime
-from app.model import Books, Locations, Authors, Genres, States
-from app.database import session as dbSession
+from books.model import Books, Locations, Authors, Genres, States
+from books.database import session as dbSession
 
 
 class BooksRepo:

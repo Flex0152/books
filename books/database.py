@@ -1,4 +1,4 @@
-from app.model import Base
+from books.model import Base
 import sqlalchemy as sa 
 from sqlalchemy.orm import sessionmaker
 
