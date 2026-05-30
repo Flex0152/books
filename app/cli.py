@@ -1,4 +1,4 @@
-from app.dependencies import (
+from dependencies import (
     book_service_builder,
     author_service_builder,
     location_service_builder,
@@ -6,7 +6,7 @@ from app.dependencies import (
     state_service_builder
 )
 import typer
-from app.database import session
+from database import session
 
 from rich import print as rprint
 from rich.console import Console

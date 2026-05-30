@@ -1,14 +1,14 @@
-from app.services import (BookService,
+from services import (BookService,
     AuthorService,
     GenreService,
     LocationService,
     StateService)
-from app.repos import (BooksRepo,
+from repos import (BooksRepo,
     AuthorsRepo,
     GenresRepo,
     StatesRepo,
     LocationsRepo)
-from app.database import session as db
+from database import session as db
 from sqlalchemy.orm import Session
 
 
