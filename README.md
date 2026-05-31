@@ -52,12 +52,17 @@ uv run database.py
 git clone https://github.com/Flex0152/books.git
 cd books
 ```
-### 2. create the image
+### 2. Create the image
 ```bash
 docker build -f books.Dockerfile -t books-app .
 ```
 
-### 3. use the container (interactive)
+### 2.1. Create the image with compose
+```bash
+docker-compose build
+```
+
+### 3. Use the container (interactive)
 ```bash
 docker run --rm -it -v "$(pwd)/data/:/books/data/" books-app books --help
 ```

@@ -1,0 +1,8 @@
+services:
+  books-app:
+    build:
+      context: .
+      dockerfile: ./books.Dockerfile
+      
+    volumes:
+      - ./data/:/books/data/
