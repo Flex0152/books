@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from pathlib import Path
 
 
-db_file_path = Path(__file__).parent.parent / "data" / "books.db"
+db_file_path = Path(".") / "data" / "books.db"
 db_file_path.parent.mkdir(parents=True, exist_ok=True)
 
 if not db_file_path.is_file():
