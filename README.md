@@ -46,6 +46,23 @@ uv sync
 uv run database.py
 ```
 
+## 💾 Installation with docker
+### 1. Clone the repository
+```bash
+git clone https://github.com/Flex0152/books.git
+cd books
+```
+### 2. create the image
+```bash
+docker build -f books.Dockerfile -t books-app .
+```
+
+### 3. use the container (interactive)
+```bash
+docker run --rm -it -v "$(pwd)/data/:/books/data/" books-app books --help
+```
+You can find all available options in the section Quick Start.
+
 ## 🚀 Quick Start
 All commands follow this structure:
 
