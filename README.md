@@ -59,6 +59,7 @@ docker build -f books.Dockerfile -t books-app .
 
 ### 2.1. Create the image with compose
 ```bash
+# Alternative to docker build command
 docker-compose build
 ```
 
